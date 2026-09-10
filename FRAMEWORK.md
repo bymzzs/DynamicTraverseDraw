@@ -847,26 +847,3 @@ private:
   传入 `nullptr` 则使用游戏内置的 `CreateReader()`。
 
 ---
-
-## 11. 与原项目的模块映射及当前 TODO
-
-> PUBG 适配层（原 games/Pubg.hpp）已按框架重构前的版本删除；下表是
-> 重写时的对照清单，重写后接回 Games.h 即可。
-
-| 原项目（TGOD_pubg/jni/hack） | 重写后归属 | 状态 |
-| --- | --- | --- |
-| main_hack.cpp 初始化/主循环拆解 | `Game` 基类生命周期 + `GameRuntime` | ✅ 框架已就位 |
-| ObjectManage/DataStruct.h | `core/math/VecMath.h` + 游戏内结构体 | ✅ |
-| ObjectManage/ObjectDataManage.cpp 五池管理 | `TrackedList<T>` × N（模板化，逐类型） | ✅ |
-| 分帧遍历（MaxCount/NowCount） | `FrameScanner` | ✅ |
-| DrawObject / 绘图.cpp | 绘图模块 `DrawObject()`（屏幕绘制） | ⬜ 重写游戏时接 |
-| TouchAim | 自瞄模块 `Tick()` | ⬜ 重写游戏时接 |
-| 自瞄窗口 / 调试窗口 | 绘图/自瞄模块的 `AddPage` 页面（主窗口侧边栏） | ✅ 机制就位，内容随功能接 |
-| Other/BoneGet.hpp 骨骼读取 | 更新回调里做（可先缓存骨骼地址） | ⬜ 重写游戏时接 |
-| Other/classname.hpp 类名识别 | 批量读取后的游戏侧分类循环 + 名称表 | ⬜ 重写游戏时接 |
-| Other/武器.cpp、ContainerItemInfo.h 名称表 | 待接（接后可在对应模块页面提供切换） | ⬜ 重写游戏时接 |
-| diRW/kernelRW 驱动后端 | 窗口/外部配置创建后通过 `GameRuntime::Start(game, rw)` 注入 | ⬜ 按需 |
-
-框架层（core/diRW/UI）已全部就位并可运行；接一个真游戏 = 照 §10.1 的
-骨架写一个 games/Xxx.hpp，完成 `Init`/`Update`/`Shutdown` 和模块内容；可以实现
-`CreateReader()` 提供默认后端，也可以完全由窗口或其他外部配置层创建后注入。
