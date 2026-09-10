@@ -78,6 +78,9 @@ set(SOURCES
     src/ImGui/backends/imgui_impl_vulkan.cpp
     src/ImGui/misc/freetype/imgui_freetype.cpp
     src/My_Utils/stb_image.cpp
+    games/example/main.cpp
+    games/texun/main.cpp
+    games/texun/ImGuiDrawModule.cpp
 )
 
 file(GLOB UI_SOURCES CONFIGURE_DEPENDS

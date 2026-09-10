@@ -59,6 +59,10 @@ LOCAL_SRC_FILES += src/ImGui/backends/imgui_impl_opengl3.cpp
 LOCAL_SRC_FILES += src/ImGui/backends/imgui_impl_vulkan.cpp
 LOCAL_SRC_FILES += src/ImGui/misc/freetype/imgui_freetype.cpp
 LOCAL_SRC_FILES += src/My_Utils/stb_image.cpp
+LOCAL_SRC_FILES += games/example/main.cpp
+LOCAL_SRC_FILES += games/example/draw.cpp
+LOCAL_SRC_FILES += games/texun/main.cpp
+LOCAL_SRC_FILES += games/texun/draw.cpp
 LOCAL_SRC_FILES += $(FIND_SRC:$(LOCAL_PATH)/%=%)
 
 LOCAL_LDLIBS := -llog -landroid -lEGL -lGLESv3 -ldl -lm -latomic -lc
