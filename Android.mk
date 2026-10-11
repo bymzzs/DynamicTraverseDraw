@@ -1,51 +1,49 @@
 LOCAL_PATH := $(call my-dir)
 
+
 # 引入freetype静态库 #
 include $(CLEAR_VARS)
 LOCAL_MODULE := lib_git_freetype
 LOCAL_SRC_FILES := src/ImGui/misc/git_freetype/$(TARGET_ARCH_ABI)/libfreetype.a
 include $(PREBUILT_STATIC_LIBRARY)
 
+
 include $(CLEAR_VARS)
-LOCAL_MODULE := dynamic_draw
+LOCAL_MODULE := imgui_chain_1_47
 
-LOCAL_CFLAGS   := -std=c17
+LOCAL_CFLAGS := -std=c17
+LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_CPPFLAGS := -std=c++17
-LOCAL_CPPFLAGS += -DVK_USE_PLATFORM_ANDROID_KHR
-LOCAL_CPPFLAGS += -DIMGUI_IMPL_VULKAN_NO_PROTOTYPES
-LOCAL_CPPFLAGS += -DIMGUI_DISABLE_DEBUG_TOOLS
-LOCAL_CPPFLAGS += -DIMGUI_ENABLE_FREETYPE
-LOCAL_CPPFLAGS += -fexceptions -frtti
+LOCAL_CPPFLAGS += -fvisibility=hidden
 
-LOCAL_CFLAGS += -fvisibility=hidden -O2
-LOCAL_CPPFLAGS += -fvisibility=hidden -O2
+LOCAL_CPPFLAGS += -DVK_USE_PLATFORM_ANDROID_KHR       #启用 Vulkan 的 Android 平台支持
+LOCAL_CPPFLAGS += -DIMGUI_IMPL_VULKAN_NO_PROTOTYPES  #ImGui Vulkan 后端不使用 Vulkan 函数原型
+LOCAL_CPPFLAGS += -DIMGUI_DISABLE_DEBUG_TOOLS          #禁用imgui调试工具
+LOCAL_CPPFLAGS += -DIMGUI_ENABLE_FREETYPE               #启用imgui的freetype支持
+LOCAL_CPPFLAGS += -DSTB_IMAGE_IMPLEMENTATION          #启用编译stb_image
 
 #引入头文件到全局#
-LOCAL_C_INCLUDES += $(LOCAL_PATH)
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/core
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/diRW
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/games
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/Android_draw
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/Android_Graphics
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/Android_my_imgui
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/Android_touch
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/My_Utils
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/My_Utils/stb_image
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/ImGui
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/ImGui/backends
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/ImGui/misc/freetype
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/ImGui/misc/git_freetype
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/UI
 
-# UI 目录自动收集
-FIND_SRC := $(wildcard $(LOCAL_PATH)/UI/*.c*)
 
-LOCAL_SRC_FILES := src/main.cpp
-LOCAL_SRC_FILES += core/math/VecMath.cpp
+
+LOCAL_SRC_FILES := src/Android_draw/draw_Gui.cpp
+LOCAL_SRC_FILES += src/ytbl.cpp
 LOCAL_SRC_FILES += src/Android_touch/TouchHelperA.cpp
 LOCAL_SRC_FILES += src/Android_Graphics/GraphicsManager.cpp
 LOCAL_SRC_FILES += src/Android_Graphics/OpenGLGraphics.cpp
-LOCAL_SRC_FILES += src/Android_Graphics/VulkanGraphics.cpp
+LOCAL_SRC_FILES += src/Android_Graphics/VulkanGraphics.cpp 
+LOCAL_SRC_FILES += src/Android_Graphics/vulkan_wrapper.cpp
 LOCAL_SRC_FILES += src/Android_my_imgui/AndroidImgui.cpp
 LOCAL_SRC_FILES += src/Android_my_imgui/my_imgui.cpp
 LOCAL_SRC_FILES += src/Android_my_imgui/my_imgui_impl_android.cpp
@@ -58,18 +56,12 @@ LOCAL_SRC_FILES += src/ImGui/backends/imgui_impl_android.cpp
 LOCAL_SRC_FILES += src/ImGui/backends/imgui_impl_opengl3.cpp
 LOCAL_SRC_FILES += src/ImGui/backends/imgui_impl_vulkan.cpp
 LOCAL_SRC_FILES += src/ImGui/misc/freetype/imgui_freetype.cpp
-LOCAL_SRC_FILES += src/My_Utils/stb_image.cpp
-LOCAL_SRC_FILES += games/example/main.cpp
-LOCAL_SRC_FILES += games/example/draw.cpp
-LOCAL_SRC_FILES += games/texun/main.cpp
-LOCAL_SRC_FILES += games/texun/draw.cpp
-LOCAL_SRC_FILES += $(FIND_SRC:$(LOCAL_PATH)/%=%)
+LOCAL_SRC_FILES += src/My_Utils/stb_image/stb_image.cpp
+    
 
-LOCAL_LDLIBS := -llog -landroid -lEGL -lGLESv3 -ldl -lm -latomic -lc
+
+LOCAL_LDLIBS := -llog -landroid -lEGL -lGLESv3
 LOCAL_LDLIBS += -lz #freetype需要
-
-LOCAL_EXPORT_LDFLAGS += -Wl,--allow-multiple-definition
-LOCAL_EXPORT_LDFLAGS += -Wl,--gc-sections
 LOCAL_STATIC_LIBRARIES := lib_git_freetype
 
 include $(BUILD_EXECUTABLE) #可执行文件
